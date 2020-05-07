@@ -86,39 +86,39 @@ def draw_path_on(img, speed_ms, angle_steers, color=(0,0,255)):
 # ***** main loop *****
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description='Path viewer')
-  parser.add_argument('model', type=str, help='Path to model definition json. Model weights should be on the same path.')
+  #parser.add_argument('model', type=str, help='Path to model definition json. Model weights should be on the same path.')
   parser.add_argument('--dataset', type=str, default="2016-06-08--11-46-01", help='Dataset/video clip name')
   args = parser.parse_args()
 
-  with open(args.model, 'r') as jfile:
-    model = model_from_json(json.load(jfile))
+#  with open(args.model, 'r') as jfile:
+#    model = model_from_json(json.load(jfile))
 
-  model.compile("sgd", "mse")
-  weights_file = args.model.replace('json', 'keras')
-  model.load_weights(weights_file)
+  #model.compile("sgd", "mse")
+  #weights_file = args.model.replace('json', 'keras')
+  #model.load_weights(weights_file)
 
   # default dataset is the validation data on the highway
   dataset = args.dataset
   skip = 300
 
-  log = h5py.File("dataset/log/"+dataset+".h5", "r")
-  cam = h5py.File("dataset/camera/"+dataset+".h5", "r")
+  log = h5py.File("F:/comma/log/"+dataset+".h5", "r")
+  cam = h5py.File("F:/comma/camera/"+dataset+".h5", "r")
 
-  print log.keys()
+  print (log.keys())
 
   # skip to highway
   for i in range(skip*100, log['times'].shape[0]):
     if i%100 == 0:
-      print "%.2f seconds elapsed" % (i/100.0)
+      print ("%.2f seconds elapsed" % (i/100.0))
     img = cam['X'][log['cam1_ptr'][i]].swapaxes(0,2).swapaxes(0,1)
 
-    predicted_steers = model.predict(img[None, :, :, :].transpose(0, 3, 1, 2))[0][0]
+    #predicted_steers = model.predict(img[None, :, :, :].transpose(0, 3, 1, 2))[0][0]
 
     angle_steers = log['steering_angle'][i]
     speed_ms = log['speed'][i]
 
     draw_path_on(img, speed_ms, -angle_steers/10.0)
-    draw_path_on(img, speed_ms, -predicted_steers/10.0, (0, 255, 0))
+#    draw_path_on(img, speed_ms, -predicted_steers/10.0, (0, 255, 0))
 
     # draw on
     pygame.surfarray.blit_array(camera_surface, img.swapaxes(0,1))

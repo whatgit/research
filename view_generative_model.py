@@ -76,7 +76,7 @@ if __name__ == "__main__":
     E_out = E(I)
     O = G.input
     G_out = G(O)
-    print "Sampling..."
+    print ("Sampling...")
     for i in tqdm(range(128)):
       x = x.reshape((-1, 80, 160, 3))
       # code = E.predict(x, batch_size=args.batch*args.time)[0]
